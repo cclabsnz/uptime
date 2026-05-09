@@ -1,4 +1,86 @@
-# [![Upptime](https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/logo.svg)](https://upptime.js.org)
+# CCLabs Uptime Monitor
+
+Uptime monitor for all CCLabs projects, powered by [Upptime](https://upptime.js.org). Checks every 5 minutes and sends WhatsApp alerts via CallMeBot when a site goes down or recovers.
+
+**Status page:** https://cclabsnz.github.io/uptime/
+
+## Monitored Sites
+
+| Site | URL |
+|---|---|
+| Blastwave | https://blastwave.vercel.app |
+| AI Mortgage Platform | https://ai-mortgage-platform.vercel.app |
+| Mehfil | https://mehfil.vercel.app |
+| Software Insights Blog | https://software-insights-blog.vercel.app |
+| ClearBill (Paywren) | https://paywren.vercel.app |
+| CloudCounsel Website | https://cloudcounsel-website.vercel.app |
+| VCards | https://vcards.vercel.app |
+| SF Audit | https://sf-audit.vercel.app |
+| InstantCards | https://instantcards.co.nz |
+
+## Setup (one-time)
+
+### 1. GitHub Personal Access Token
+
+Go to https://github.com/settings/tokens → **Generate new token (classic)**
+
+- Note: `upptime`
+- Scopes: `repo` (full control)
+
+Add it as a secret named `GH_PAT` at:
+https://github.com/cclabsnz/uptime/settings/secrets/actions
+
+### 2. CallMeBot WhatsApp Alerts
+
+1. Save `+34 644 59 21 48` as a WhatsApp contact (name it "CallMeBot")
+2. Send this exact message to that contact:
+   ```
+   I allow callmebot to send me messages
+   ```
+3. CallMeBot will reply with your API key
+
+Add two secrets at https://github.com/cclabsnz/uptime/settings/secrets/actions:
+
+| Secret | Value |
+|---|---|
+| `CALLMEBOT_PHONE` | Your WhatsApp number in international format, e.g. `+6421xxxxxxx` |
+| `CALLMEBOT_APIKEY` | The API key from CallMeBot's reply |
+
+### 3. Enable GitHub Pages
+
+Go to https://github.com/cclabsnz/uptime/settings/pages
+
+- Source: **Deploy from a branch**
+- Branch: `gh-pages` / `/ (root)`
+- Click **Save**
+
+> The `gh-pages` branch is created automatically on the first workflow run. Trigger it manually first if it doesn't appear: Actions → Uptime CI → Run workflow.
+
+### 4. First run & test
+
+Trigger the first run: **Actions → Uptime CI → Run workflow**
+
+To test WhatsApp alerts, add a fake site to `.upptimerc.yml`, push, trigger the workflow, then remove it:
+
+```yaml
+- name: Test Down Site
+  url: https://this-url-does-not-exist-cclabsnz.vercel.app
+```
+
+### Adding more sites
+
+Edit `.upptimerc.yml` and add entries under `sites:`:
+
+```yaml
+- name: My New App
+  url: https://my-new-app.vercel.app
+```
+
+---
+
+[![Uptime CI](https://github.com/cclabsnz/uptime/workflows/Uptime%20CI/badge.svg)](https://github.com/cclabsnz/uptime/actions?query=workflow%3A%22Uptime+CI%22)
+[![Response Time CI](https://github.com/cclabsnz/uptime/workflows/Response%20Time%20CI/badge.svg)](https://github.com/cclabsnz/uptime/actions?query=workflow%3A%22Response+Time+CI%22)
+[![Static Site CI](https://github.com/cclabsnz/uptime/workflows/Static%20Site%20CI/badge.svg)](https://github.com/cclabsnz/uptime/actions?query=workflow%3A%22Static+Site+CI%22)
 
 <!--start: description-->
 
