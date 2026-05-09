@@ -1,0 +1,23 @@
+name: WhatsApp Notification
+on:
+  issues:
+    types: [opened, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'status')
+    steps:
+      - name: Set message
+        id: msg
+        run: |
+          if [ "${{ github.event.action }}" = "opened" ]; then
+            echo "text=DOWN: ${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
+          else
+            echo "text=RECOVERED: ${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send WhatsApp
+        run: |
+          ENCODED=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "${{ steps.msg.outputs.text }}")
+          curl -s "https://api.callmebot.com/whatsapp.php?phone=${{ secrets.CALLMEBOT_PHONE }}&text=${ENCODED}&apikey=${{ secrets.CALLMEBOT_APIKEY }}"
